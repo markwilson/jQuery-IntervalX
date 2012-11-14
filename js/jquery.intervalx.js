@@ -1,6 +1,23 @@
 (function ($) {
-    // TODO: move to options array rather than parameters
-    $.intervalX = function (intervalFunction, intervalPeriod, x, runImmediately, orUntil) {
+    $.intervalX = function (options) { 
+        // load in default options
+        var defaultOptions = {
+            runImmediately: false,
+            orUntil: function () { return false; },
+            doWhile: function () { return true; }
+        };
+
+        options = $.extend(defaultOptions, options);
+
+        // extract options
+        var intervalFunction = options.intervalFunction;
+        var intervalPeriod = options.intervalPeriod;
+        var x = options.x;
+        var runImmediately = options.runImmediately;
+        var orUntil = options.orUntil;
+        var doWhile = options.doWhile;
+        var additionalParameters = options.additionalParameters;
+
         // validate intervalFunction - check it is callable
         if (typeof intervalFunction !== 'function') {
             throw new Error('intervalFunction is not a callable function');
@@ -26,17 +43,14 @@
         }
 
         // validate orUntil - callable given
-        if (typeof orUntil === 'undefined') {
-            orUntil = function () { return false; };
-        }
-        // check orUntil is callable
         if (typeof orUntil !== 'function') {
             throw new Error('orUntil is not a callable function');
         }
 
-        // get parameters array - additional params for this function
-        var additionalParameters = Array.prototype.slice.call(arguments, 5);
-
+        // validate doWhile - callable given
+        if (typeof doWhile !== 'function') {
+            throw new Error('doWhile is not a callable function');
+        }
 
         // initialise intervals
         var runsRemaining = x;
@@ -44,8 +58,8 @@
 
         // internal interval function
         var intervalExecuted = function () {
-            // check orUntil is false
-            if (orUntil() === true) {
+            // check orUntil is false or doWhile is true
+            if (!orUntil() && !doWhile()) {
                 clearInterval(interval);
                 return;
             }

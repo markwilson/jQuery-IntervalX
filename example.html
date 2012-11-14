@@ -5,11 +5,17 @@
 <script>
 $(document).ready(function () {
     var currentNumber = 1;
-    function myTest(callback)
+    function myTest()
     {
         console.log(currentNumber++);
     }
-    $.intervalX(myTest, 1000, 10, true);
+
+    $.intervalX({
+        intervalFunction: myTest,
+        intervalPeriod: 1000,
+        x: 10,
+        runImmediately: true
+    });
 });
 </script>
 </head>
