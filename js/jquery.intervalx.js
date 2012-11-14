@@ -1,6 +1,6 @@
 (function ($) {
     // TODO: move to options array rather than parameters
-    $.intervalXTimes = function (intervalFunction, intervalPeriod, x, runImmediately, orUntil) {
+    $.intervalX = function (intervalFunction, intervalPeriod, x, runImmediately, orUntil) {
         // validate intervalFunction - check it is callable
         if (typeof intervalFunction !== 'function') {
             throw new Error('intervalFunction is not a callable function');
