@@ -33,4 +33,7 @@ Additional parameters:
  - doWhile
   - callable function
   - should return if false if needed to halt prematurely
+ - andFinally
+  - callable function
+  - executes when all intervals have completed, or intervals are halted by orUntil or doWhile
 
