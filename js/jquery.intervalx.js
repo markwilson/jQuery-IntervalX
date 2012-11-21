@@ -4,7 +4,8 @@
         var defaultOptions = {
             runImmediately: false,
             orUntil: function () { return false; },
-            doWhile: function () { return true; }
+            doWhile: function () { return true; },
+            andFinally: function () { }
         };
 
         options = $.extend(defaultOptions, options);
@@ -16,6 +17,7 @@
         var runImmediately = options.runImmediately;
         var orUntil = options.orUntil;
         var doWhile = options.doWhile;
+        var andFinally = options.andFinally;
         var additionalParameters = options.additionalParameters;
 
         // validate intervalFunction - check it is callable
@@ -52,6 +54,11 @@
             throw new Error('doWhile is not a callable function');
         }
 
+        // validate andFinally - callable given
+        if (typeof andFinally !== 'function') {
+            throw new Error('andFinally is not a callable function');
+        }
+
         // initialise intervals
         var runsRemaining = x;
         var interval;
@@ -61,6 +68,7 @@
             // check orUntil is false or doWhile is true
             if (!orUntil() && !doWhile()) {
                 clearInterval(interval);
+                andFinally();
                 return;
             }
 
@@ -72,6 +80,7 @@
             if (runsRemaining === 0) {
                 // no more interval executions
                 clearInterval(interval);
+                andFinally();
             }
         };
 
